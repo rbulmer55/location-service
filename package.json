@@ -11,10 +11,10 @@
     "predeploy": "source .env && npm run plan",
     "deploy": "source .env && cd ./terraform/env/dev && terraform apply -auto-approve",
     "destroy": "source .env && cd ./terraform/env/dev && terraform destroy -auto-approve",
-    "preplanDot": "npm run build",
-    "planDot": "dotenv -e .env -- bash -c 'cd ./terraform/env/$(echo $TF_VAR_ENVIRONMENT | tr \"[:upper:]\" \"[:lower:]\") && terraform init --upgrade=true && terraform plan'",
-    "predeployDot": "dotenv -e .env -- bash -c 'npm run planDot'",
-    "deployDot": "dotenv -e .env -- bash -c 'cd ./terraform/env/$(echo $TF_VAR_ENVIRONMENT | tr \"[:upper:]\" \"[:lower:]\") && terraform apply -auto-approve'"
+    "preplanDev": "npm run build",
+    "planDev": "dotenv -e .env.development -- bash -c 'cd ./terraform/env/$(echo $TF_VAR_ENVIRONMENT | tr \"[:upper:]\" \"[:lower:]\") && terraform init --upgrade=true && terraform plan'",
+    "predeployDev": "dotenv -e .env.development -- bash -c 'npm run planDev'",
+    "deployDev": "dotenv -e .env.development -- bash -c 'cd ./terraform/env/$(echo $TF_VAR_ENVIRONMENT | tr \"[:upper:]\" \"[:lower:]\") && terraform apply -auto-approve'"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.147",
