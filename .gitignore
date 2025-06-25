@@ -40,5 +40,5 @@ crash.*.log
 
 .env*
 dist
-!esbuild/build.js
+!build.js
 !.env
