@@ -46,7 +46,7 @@ resource "aws_security_group" "endpoint_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [aws_vpc.app_vpc.cidr_block]
   }
   tags = merge(var.tags, {
     Name = "MongoDB Atlas Security Group"
