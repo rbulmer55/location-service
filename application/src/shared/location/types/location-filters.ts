@@ -4,7 +4,7 @@ export type LocationFilterDTO = {
   construction?: Construction;
   buildingCat?: BuildingCategory;
   metadata: {
-    limit?: number;
+    pageSize?: number;
     lastDocument: string | null;
     sortOrder?: {
       [key: string]: 1 | -1;

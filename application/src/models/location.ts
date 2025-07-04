@@ -12,7 +12,7 @@ export enum BuildingCategory {
 }
 
 export type Location = {
-  id: string;
+  id?: string;
   name: string;
   address: {
     addressLine1: string;

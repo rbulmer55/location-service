@@ -1,3 +1,8 @@
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
+
+
+
 resource "aws_api_gateway_rest_api" "this" {
   name        = var.api_name
   description = var.api_description
@@ -49,9 +54,9 @@ resource "aws_api_gateway_integration" "get_locations_integration" {
   rest_api_id             = aws_api_gateway_rest_api.this.id
   resource_id             = aws_api_gateway_resource.location.id
   http_method             = aws_api_gateway_method.get_locations.http_method
-  integration_http_method = "GET"
+  integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = var.get_location_lambda_arn
+  uri                     = var.get_locations_lambda_arn
 }
 
 # Deployment and stage  
@@ -83,18 +88,20 @@ resource "aws_api_gateway_stage" "stage" {
   stage_name    = var.stage_name
 }
 
+
 # Lambda permission for API Gateway  
 resource "aws_lambda_permission" "apigw_create_locations" {
-  statement_id  = "AllowAPIGatewayInvoke"
+  statement_id  = "AllowAPIGatewayInvokeCreateLocation"
   action        = "lambda:InvokeFunction"
   function_name = var.create_location_lambda_name
   principal     = "apigateway.amazonaws.com"
+  source_arn    = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.this.id}/*"
 }
 
-# Lambda permission for API Gateway  
 resource "aws_lambda_permission" "apigw_get_locations" {
-  statement_id  = "AllowAPIGatewayInvoke"
+  statement_id  = "AllowAPIGatewayInvokeGetLocations"
   action        = "lambda:InvokeFunction"
-  function_name = var.get_location_lambda_name
+  function_name = var.get_locations_lambda_name
   principal     = "apigateway.amazonaws.com"
+  source_arn    = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.this.id}/*"
 }

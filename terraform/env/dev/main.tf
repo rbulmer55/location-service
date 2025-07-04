@@ -78,10 +78,10 @@ module "api_gateway" {
 
   create_location_lambda_arn  = module.create_location_function.invoke_arn
   create_location_lambda_name = module.create_location_function.function_name
-  get_location_lambda_arn     = module.get_locations_function.invoke_arn
-  get_location_lambda_name    = module.get_locations_function.function_name
+  get_locations_lambda_arn    = module.get_locations_function.invoke_arn
+  get_locations_lambda_name   = module.get_locations_function.function_name
 
-  depends_on = [module.create_location_function]
+  depends_on = [module.create_location_function, module.get_locations_function]
 }
 
 

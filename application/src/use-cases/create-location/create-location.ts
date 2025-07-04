@@ -3,17 +3,15 @@ import { logger, schemaValidator } from '@shared';
 import { schema } from '@schemas/location';
 import { createLocationAdapter } from '@adapters/secondary/create-location/create-location.adapter';
 import { Location } from '@models/location';
-import { v4 as uuid } from 'uuid';
 import { checkFireAssets } from '@shared/location/check-fire-assets';
 import { checkTheftAssets } from '@shared/location/check-theft-assets';
 
 export async function createLocationUseCase(
   locationEntry: LocationDTO,
 ): Promise<Location> {
-  const id: string = uuid();
   const createdAt = new Date();
 
-  const locationEntity: Location = { ...locationEntry, createdAt, id };
+  const locationEntity: Location = { ...locationEntry, createdAt };
 
   schemaValidator(schema, locationEntity);
 
@@ -28,9 +26,9 @@ export async function createLocationUseCase(
    */
   checkTheftAssets(locationEntity);
 
-  await createLocationAdapter(locationEntity);
+  const location = await createLocationAdapter(locationEntity);
 
-  logger.info(`location created: ${locationEntity.name}-${id}`);
+  logger.info(`location created: ${location.name}-${location.id}`);
 
-  return locationEntity;
+  return location;
 }

@@ -1,7 +1,7 @@
 export const schema = {
   $id: 'https://example.com/location.json',
   type: 'object',
-  required: ['id', 'name', 'address', 'occupancy', 'risk'],
+  required: ['name', 'address', 'occupancy', 'risk'],
   maxProperties: 10, // TODO - amend base schema
   minProperties: 0,
   properties: {

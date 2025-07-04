@@ -1,11 +1,6 @@
-import { LocationDTO } from '@dto/location';
 import { logger, schemaValidator } from '@shared';
-import { schema } from '@schemas/location';
-import { createLocationAdapter } from '@adapters/secondary/create-location/create-location.adapter';
+import { schema } from '@schemas/location/location-filter';
 import { Location } from '@models/location';
-import { v4 as uuid } from 'uuid';
-import { checkFireAssets } from '@shared/location/check-fire-assets';
-import { checkTheftAssets } from '@shared/location/check-theft-assets';
 import {
   LocationFilter,
   LocationFilterDTO,
@@ -21,9 +16,9 @@ export async function getLocationsUseCase(
   const dbFilter: LocationFilter = {
     ...filter,
     metadata: {
-      paginiationLimit: metadata.limit || 10,
-      sortOrder: { ...metadata.sortOrder, _id: 1 },
-      nextToken: metadata.lastDocument,
+      paginiationLimit: metadata?.pageSize ?? 10,
+      sortOrder: { ...(metadata?.sortOrder ?? {}), _id: 1 },
+      nextToken: metadata?.lastDocument,
     },
   };
 

@@ -6,7 +6,6 @@ import { captureLambdaHandler } from '@aws-lambda-powertools/tracer/middleware';
 import { injectLambdaContext } from '@aws-lambda-powertools/logger/middleware';
 import { logMetrics } from '@aws-lambda-powertools/metrics/middleware';
 import middy from '@middy/core';
-import { ValidationError } from '@errors/validation-error';
 import { schema } from './get-locations.schema';
 import httpErrorHandler from '@middy/http-error-handler';
 import { config } from '@config';
@@ -23,9 +22,7 @@ export const getLocations = async ({
   body,
 }: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
-    if (!body) throw new ValidationError('no payload body');
-
-    const locationFilters = JSON.parse(body) as LocationFilterDTO;
+    const locationFilters: LocationFilterDTO = body ? JSON.parse(body) : {};
 
     schemaValidator(schema, locationFilters);
 

@@ -13,9 +13,12 @@ export const schema = {
       enum: ['household', 'business', 'government'],
     },
     metadata: {
-      paginationLimit: { type: 'number' },
-      nextToken: { type: 'string' },
-      sortOrder: { type: 'object' },
+      type: 'object',
+      properties: {
+        paginationLimit: { type: 'number' },
+        nextToken: { type: 'string' },
+        sortOrder: { type: 'object' },
+      },
     },
   },
 };
