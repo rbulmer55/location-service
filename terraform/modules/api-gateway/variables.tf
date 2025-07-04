@@ -15,12 +15,25 @@ variable "stage_name" {
   default     = "dev"
 }
 
+/**
+Lambda specific
+*/
 variable "create_location_lambda_arn" {
   description = "Lambda function invoke ARN"
   type        = string
 }
 
 variable "create_location_lambda_name" {
+  description = "Lambda function name"
+  type        = string
+}
+
+variable "get_location_lambda_arn" {
+  description = "Lambda function invoke ARN"
+  type        = string
+}
+
+variable "get_location_lambda_name" {
   description = "Lambda function name"
   type        = string
 }

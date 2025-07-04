@@ -53,14 +53,33 @@ module "create_location_function" {
   ]
 }
 
+module "get_locations_function" {
+  source                  = "../../modules/functions/location/get-locations"
+  function_name           = "${local.project_name}-${var.ENVIRONMENT}-GetLocations"
+  db_connection_secret    = module.application_secrets.db_connection_secret
+  vpc_cidr                = module.location_vpc.vpc_cidr
+  vpc_id                  = module.location_vpc.vpc_id
+  private_subnet_id       = module.location_vpc.vpc_prv_subnet_id
+  atlas_security_group_id = module.location_vpc.atlas_security_group_id
+  tags                    = local.common_tags
+
+  depends_on = [
+    module.application_secrets,
+    module.location_vpc
+  ]
+}
+
 module "api_gateway" {
-  source                      = "../../modules/api-gateway"
-  api_name                    = "${local.project_name}-${var.ENVIRONMENT}-API"
-  api_description             = "API for location operations"
-  stage_name                  = lower(var.ENVIRONMENT)
+  source          = "../../modules/api-gateway"
+  api_name        = "${local.project_name}-${var.ENVIRONMENT}-API"
+  api_description = "API for location operations"
+  stage_name      = lower(var.ENVIRONMENT)
+  tags            = local.common_tags
+
   create_location_lambda_arn  = module.create_location_function.invoke_arn
   create_location_lambda_name = module.create_location_function.function_name
-  tags                        = local.common_tags
+  get_location_lambda_arn     = module.get_locations_function.invoke_arn
+  get_location_lambda_name    = module.get_locations_function.function_name
 
   depends_on = [module.create_location_function]
 }

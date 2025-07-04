@@ -36,6 +36,24 @@ resource "aws_api_gateway_integration" "post_location_integration" {
   uri                     = var.create_location_lambda_arn
 }
 
+# Method: GET  
+resource "aws_api_gateway_method" "get_locations" {
+  rest_api_id   = aws_api_gateway_rest_api.this.id
+  resource_id   = aws_api_gateway_resource.location.id
+  http_method   = "GET"
+  authorization = "NONE"
+}
+
+# Lambda Integration  
+resource "aws_api_gateway_integration" "get_locations_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.this.id
+  resource_id             = aws_api_gateway_resource.location.id
+  http_method             = aws_api_gateway_method.get_locations.http_method
+  integration_http_method = "GET"
+  type                    = "AWS_PROXY"
+  uri                     = var.get_location_lambda_arn
+}
+
 # Deployment and stage  
 resource "aws_api_gateway_deployment" "deployment" {
   rest_api_id = aws_api_gateway_rest_api.this.id
@@ -43,7 +61,9 @@ resource "aws_api_gateway_deployment" "deployment" {
     redeploy = sha1(jsonencode([
       aws_api_gateway_resource.location.id,
       aws_api_gateway_method.post_location.id,
-      aws_api_gateway_integration.post_location_integration.id
+      aws_api_gateway_integration.post_location_integration.id,
+      aws_api_gateway_method.get_locations.id,
+      aws_api_gateway_integration.get_locations_integration.id
     ]))
   }
 
@@ -52,7 +72,8 @@ resource "aws_api_gateway_deployment" "deployment" {
   }
 
   depends_on = [
-    aws_api_gateway_integration.post_location_integration
+    aws_api_gateway_integration.post_location_integration,
+    aws_api_gateway_integration.get_locations_integration
   ]
 }
 
@@ -63,9 +84,17 @@ resource "aws_api_gateway_stage" "stage" {
 }
 
 # Lambda permission for API Gateway  
-resource "aws_lambda_permission" "apigw" {
+resource "aws_lambda_permission" "apigw_create_locations" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
   function_name = var.create_location_lambda_name
+  principal     = "apigateway.amazonaws.com"
+}
+
+# Lambda permission for API Gateway  
+resource "aws_lambda_permission" "apigw_get_locations" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = var.get_location_lambda_name
   principal     = "apigateway.amazonaws.com"
 }
