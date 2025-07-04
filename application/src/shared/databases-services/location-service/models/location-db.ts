@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 enum Construction {
   'wood',
   'concrete',
@@ -12,7 +14,7 @@ enum BuildingCategory {
 }
 
 export type LocationDB = {
-  _id: string;
+  _id: ObjectId;
   name: string;
   address: {
     addressLine1: string;

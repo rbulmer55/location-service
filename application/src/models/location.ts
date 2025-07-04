@@ -1,11 +1,11 @@
-enum Construction {
+export enum Construction {
   'wood',
   'concrete',
   'stone',
   'brick',
 }
 
-enum BuildingCategory {
+export enum BuildingCategory {
   'household',
   'buisness',
   'government',
